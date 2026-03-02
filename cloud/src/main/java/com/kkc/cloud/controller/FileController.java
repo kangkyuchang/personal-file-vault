@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kkc.cloud.CloudConfig;
+import com.kkc.cloud.data.LoginData;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -41,7 +42,7 @@ public class FileController {
 		String id = (String) session.getAttribute("id");
 		if(id == null)
 			return ResponseEntity.internalServerError().build();
-		if(!id.equals(LoginController.id))
+		if(!id.equals(LoginData.adminId))
 			return ResponseEntity.internalServerError().build();
 		String uploadPath = CloudConfig.storePath;
 		if(path != "")
@@ -65,7 +66,7 @@ public class FileController {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		if(id == null)
 			return list;
-		if(!id.equals(LoginController.id))
+		if(!id.equals(LoginData.adminId))
 			return list;
 		if(directory == null)
 			return list;
