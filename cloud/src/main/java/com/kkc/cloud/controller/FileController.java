@@ -5,10 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +14,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +35,9 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class FileController {
+	
+	@Autowired
+	private CloudConfig cloudConfig;
 
 	@PostMapping("/upload")
 	public ResponseEntity<Void> uploadFiles(@RequestParam("path") String path, @RequestParam("files") MultipartFile[] files, HttpSession session) throws IOException {
@@ -44,9 +46,9 @@ public class FileController {
 			return ResponseEntity.internalServerError().build();
 		if(!id.equals(LoginData.adminId))
 			return ResponseEntity.internalServerError().build();
-		String uploadPath = CloudConfig.storePath;
+		String uploadPath = cloudConfig.getStorePath();
 		if(path != "")
-			uploadPath += "\\" + path;
+			uploadPath += "/" + path;
 		File dir = new File(uploadPath);
 		if(!dir.exists())
 			dir.mkdirs();
@@ -62,15 +64,15 @@ public class FileController {
 	@GetMapping("/load")
 	@ResponseBody
 	public List<Map<String, Object>> getList(@RequestParam("directory") String directory, HttpSession session) throws Exception {
-		String id = (String) session.getAttribute("id");
+//		String id = (String) session.getAttribute("id");
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		if(id == null)
-			return list;
-		if(!id.equals(LoginData.adminId))
-			return list;
+//		if(id == null)
+//			return list;
+//		if(!id.equals(LoginData.adminId))
+//			return list;
 		if(directory == null)
 			return list;
-		String path = CloudConfig.storePath;
+		String path = cloudConfig.getStorePath();
 		if(!directory.equals("")) {
 			path += "/" + directory;
 		}
@@ -99,9 +101,14 @@ public class FileController {
 	}
 	
 	@PostMapping("/remove")
-	public ResponseEntity<Void> removeFiles(@RequestParam("fileName") List<String> fileNames, @RequestParam("path") String path) {
+	public ResponseEntity<Void> removeFiles(@RequestParam("fileName") List<String> fileNames, @RequestParam("path") String path, HttpSession session) {
+		String id = (String) session.getAttribute("id");
+		if(id == null)
+			return ResponseEntity.badRequest().build();
+		if(!id.equals(LoginData.adminId))
+			return ResponseEntity.badRequest().build();
 		for(String fileName : fileNames) {
-			Path filePath = Path.of(CloudConfig.storePath, path, fileName);
+			Path filePath = Path.of(cloudConfig.getStorePath(), path, fileName);
 			File file = filePath.toFile();
 			if(!file.exists()) {
 				continue;
@@ -124,31 +131,40 @@ public class FileController {
 	}
 	
 //	@GetMapping("/download")
-	public ResponseEntity<Resource> donwloadFile(@RequestParam("fileName") String fileName, @RequestParam("path") String location) throws Exception {
-		try {
-			String root = CloudConfig.storePath;
-			if(location != "") {
-				root += "\\" + location;
-			}
-			Path path = Paths.get(root).resolve(fileName).normalize();
-			Resource resource = new UrlResource(path.toUri());
-			System.out.println(path);
-			if(!resource.exists()) 
-				return ResponseEntity.notFound().build();
-			
-			String encodedFileName = URLEncoder.encode(resource.getFilename(), "UTF-8").replaceAll("\\+", "%20");
-			return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"").body(resource);
-		}
-		catch(MalformedURLException e) {
-			return ResponseEntity.badRequest().build();
-		}
-		
-	}
+//	public ResponseEntity<Resource> donwloadFile(@RequestParam("fileName") String fileName, @RequestParam("path") String location) throws Exception {
+//		try {
+//			String root = cloudConfig.getStorePath();
+//			if(location != "") {
+//				root += "\\" + location;
+//			}
+//			Path path = Paths.get(root).resolve(fileName).normalize();
+//			Resource resource = new UrlResource(path.toUri());
+//			System.out.println(path);
+//			if(!resource.exists()) 
+//				return ResponseEntity.notFound().build();
+//			
+//			String encodedFileName = URLEncoder.encode(resource.getFilename(), "UTF-8").replaceAll("\\+", "%20");
+//			return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"").body(resource);
+//		}
+//		catch(MalformedURLException e) {
+//			return ResponseEntity.badRequest().build();
+//		}
+//		
+//	}
 	
 	@GetMapping("/download")
-	public void donwloadFiles(@RequestParam("fileName") List<String> fileNames, @RequestParam("path") String path, HttpServletResponse response) throws Exception {
+	public void donwloadFiles(@RequestParam("fileName") List<String> fileNames, @RequestParam("path") String path, HttpServletResponse response, HttpSession session) throws Exception {
+		String id = (String) session.getAttribute("id");
+		if(id == null) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "해당 파일에 접근할 권한이 없습니다.");
+			return;
+		}
+		if(!id.equals(LoginData.adminId)) {
+			response.sendError(HttpServletResponse.SC_FORBIDDEN, "해당 파일에 접근할 권한이 없습니다.");
+			return;
+		}
 		if(fileNames.size() == 1) {
-			Path filePath = Path.of(CloudConfig.storePath, path, fileNames.get(0));
+			Path filePath = Path.of(cloudConfig.getStorePath(), path, fileNames.get(0));
 			File file = filePath.toFile();
 			if(!file.exists()) {
 				return;
@@ -178,7 +194,7 @@ public class FileController {
 		response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + "\"");
 		ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 		for(String fileName : fileNames) {
-			Path filePath = Path.of(CloudConfig.storePath, path, fileName);
+			Path filePath = Path.of(cloudConfig.getStorePath(), path, fileName);
 			File file = filePath.toFile();
 			if(!file.exists())
 				continue;

@@ -1,47 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
     <div class="headerWrap">
-        <input type="text" autocomplete="off" required>
-        <img src="/asset/search2.png">
+        <input type="text" placeholder="파일 검색..." autocomplete="off" required>
+        <img src="/asset/search2.png" alt="search">
     </div>
 
     <div class="bodyWrap">
         <input type="checkbox" id="drawer-toggle" class="drawer-checkbox">
         <label for="drawer-toggle" class="drawer-button">></label>
+        
         <div class="drawer">
             <div class="drawer-content">
-                <ul>
-                    <li>
-                        강규창
-                        <ul>
-                            <li>ㄴtest</li>
-                            <li>ㄴtest2</li>
-                        </ul>
-                    </li>
-                    <li>
-                        강민희
-                    </li>
-                </ul>
-            </div>
+                </div>
         </div>
+
         <div class="hierarchyWrap">
+            <div class="brand-logo">
+                <h1>☀️ SOLAR DRIVE</h1>
+                <p>개인 소유</p>
+            </div>
             <ul>
-               <li class="hierarchy-root">
+               <li id="owner" class="hierarchy-root">
                     <h2>강규창</h2>
                 </li>
-                <li class="hierarchy-root">
+                <!-- <li class="hierarchy-root">
                     <h2>강민희</h2>
-                </li>
+                </li> -->
             </ul>
         </div>
+
         <div class="mainWrap">
             <div class="menu-wrap">
                 <button type="button" id="uploadBtn">업로드</button>
@@ -50,48 +45,6 @@
                 <button type="button" id="removeBtn">삭제</button>
             </div>
             <div class="item-container">
-                <!-- <div class="item-wrap">
-                    <div class="item">
-                        <img src="/asset/folder.png">
-                    </div>
-                    <p>문서</p>
-                </div>
-                <div class="item-wrap">
-                    <div class="item">
-                        <img src="/asset/folder.png">
-                    </div>
-                    <p>내 폴더</p>
-                </div>
-                <div class="item-wrap">
-                    <div class="item">
-                        <img src="/asset/file.png" height="80%">
-                    </div>
-                    <p>1.txt</p>
-                </div>
-                <div class="item-wrap">
-                    <div class="item">
-                        <img src="/asset/file.png" height="80%">
-                    </div>
-                    <p>2.txt</p>
-                </div>
-                <div class="item-wrap">
-                    <div class="item">
-                        <img src="/asset/file.png" height="80%">
-                    </div>
-                    <p>3.txt</p>
-                </div>
-                <div class="item-wrap">
-                    <div class="item">
-                        <img src="/asset/file.png" height="80%">
-                    </div>
-                    <p>4.txt</p>
-                </div>
-                <div class="item-wrap">
-                    <div class="item">
-                        <img src="/asset/file.png" height="80%">
-                    </div>
-                    <p>5.txt</p>
-                </div> -->
             </div>
         </div>
     </div>

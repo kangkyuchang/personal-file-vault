@@ -1,16 +1,16 @@
 import { ArrayList } from "./util.js";
 const selectedItems = new ArrayList();
-const history = new ArrayList(5);
 const visitedDirectory = new Map();
+const hierarchyHistory = new Map();
 let nowDirectory = "";
 let nowDirectoryElement = null;
 
 function selectItem(element) {
     if(selectedItems.removeIfExists(element)) {
-        element.style.border = "2px solid #F8E5D3";
+        element.classList.remove("selected");
     }
     else {
-        element.style.border = "2px solid gray";
+        element.classList.add("selected");
         selectedItems.add(element);
     }
 }
@@ -32,6 +32,8 @@ function loadFiles(DirectoryName) {
         createlistGUI(obj);
         const clone = container.cloneNode(true);
         visitedDirectory.set(DirectoryName, clone);
+        const hierarchy = document.getElementById("owner").cloneNode(true);
+        hierarchyHistory.set(DirectoryName, hierarchy);
     });
 }
 
@@ -52,8 +54,6 @@ function handleFiles(files) {
             loadFiles(nowDirectory);
         }
     });
-
-    
 }
 
 function createlistGUI(list) {
@@ -62,7 +62,7 @@ function createlistGUI(list) {
     const user = hierarchy[0];
     let parentDirectory = user;
     const pathSplit = nowDirectory.split("/");
-    
+
     if(pathSplit[0] != "") {
         for(let i = 0; i < pathSplit.length; i++) {
             let isFind = false;
@@ -75,6 +75,12 @@ function createlistGUI(list) {
                     parentDirectory = list[j];
                     isFind = true;
                     break;
+                }
+                else {
+                    const ul = list[j].querySelector("ul");
+                    if(ul != null) {
+                        ul.innerHTML = "";
+                    }
                 }
             }
             if(!isFind)
@@ -95,7 +101,7 @@ function createlistGUI(list) {
         item.setAttribute("name", name);
         let extension = "";
         if(type == "file") {
-            img.src = "/asset/file.png";
+            img.src = "/asset/file.svg";
             img.style.height = "80%";
             const split = name.split(".");
             extension = split[split.length - 1];
@@ -103,7 +109,7 @@ function createlistGUI(list) {
             name = name.replace(regex, "");
         }
         else {
-            img.src = "/asset/folder.png";
+            img.src = "/asset/folder.svg";
             const liElement = document.createElement("li");
             const pElement = document.createElement("p");
             pElement.textContent = "ㄴ " + name;
@@ -143,9 +149,10 @@ function createlistGUI(list) {
     parentDirectory.appendChild(ulElement);
 }
 
-function goToFolder(folder) { //매개변수가 <P> or <div> 태그 요소임
+function goToFolder(folder) {
     let path;
     let hierarchy;
+    console.log(folder);
     if(folder.tagName == "P" || folder.tagName == "H2") {
         path = getPath(folder);
         hierarchy = folder;
@@ -162,17 +169,23 @@ function goToFolder(folder) { //매개변수가 <P> or <div> 태그 요소임
     if(nowDirectoryElement != null) {
         nowDirectoryElement.classList.remove("hierarchy-now");
     }
-    hierarchy.classList.add("hierarchy-now");
-    nowDirectoryElement = hierarchy;
+
     if(visitedDirectory.has(path)) {
         const element = visitedDirectory.get(path);
         const itemContainer = document.querySelector(".item-container");
         itemContainer.innerHTML = element.innerHTML;
+        const hierarchyElement = hierarchyHistory.get(path);
+        const hierarchy = document.querySelectorAll(".hierarchy-root")[0];
+        hierarchy.innerHTML = hierarchyElement.innerHTML;
         nowDirectory = path;
+        nowDirectoryElement = getHierarchy(path);
     }
     else {
+        nowDirectoryElement = hierarchy;
         loadFiles(path);
     }
+
+    nowDirectoryElement.classList.add("hierarchy-now");
 } 
 
 function getPath(target) {
@@ -197,7 +210,6 @@ function getHierarchy(path) {
     const user = hierarchy[0];
     let nextDirectory = user;
     const pathSplit = path.split("/");
-    console.log(path);
     
     if(pathSplit[0] != "") {
         for(let i = 0; i < pathSplit.length; i++) {
@@ -217,7 +229,7 @@ function getHierarchy(path) {
         }
     }
 
-    return nextDirectory.querySelector("p");
+    return nextDirectory != user ? nextDirectory.querySelector("p") : nextDirectory.querySelector("h2");
 }
 
 function downloadFile(url, fileName) {
@@ -279,11 +291,10 @@ function main() {
         else if(target.tagName == "P") {
             item = target.parentElement.querySelector(".item");
         }
-        else if(target.className == "item") {
+        else if(target.className == "item" || target.className == "item selected") {
             item = target;
         }
         if(item != null) {
-            console.log(item.getAttribute('name'));
             selectItem(item);
         }
     });
@@ -304,11 +315,11 @@ function main() {
             const img = item.querySelector("img");
             const split = img.src.split("/");
             const type = split[split.length - 1];
-            if(type == "folder.png") {
+            if(type == "folder.svg") {
                 goToFolder(item);
             }
             for(let i = 0; i < selectedItems.size(); i++) {
-                selectedItems.get(i).style.border = "2px solid #F8E5D3";
+                selectedItems.get(i).classList.remove("selected");
             }
             selectedItems.clear();
         }
@@ -327,7 +338,7 @@ function main() {
     });
 
     const removeBtn = document.querySelector("#removeBtn");
-    downloadBtn.addEventListener("click", () => {
+    removeBtn.addEventListener("click", () => {
         const formDate = new FormData();
 
         for (let i = 0; i < files.length; i++) {

@@ -77,7 +77,7 @@ body::before {
 }
 
 .btnArea {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .btnArea button {
@@ -89,4 +89,35 @@ body::before {
     border: none;
     border-radius: 25px;
     cursor: pointer;
+}
+
+.guestArea {
+    margin-top: 5px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.guestBtn {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.guestBtn .arrow {
+    transition: transform 0.3s ease;
+}
+
+.guestBtn:hover {
+    color: #FF4848;
+}
+
+.guestBtn:hover .arrow {
+    transform: translateX(4px);
 }

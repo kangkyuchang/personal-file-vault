@@ -5,8 +5,9 @@
 }
 
 body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: #FFFBF1;
+    font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+    background: radial-gradient(circle at 50% 0%, #1a2235 0%, #0b0e14 100%);
+    color: #e2e8f0;
     width: 100%;
     height: 100vh;
     overflow: hidden;
@@ -15,36 +16,43 @@ body {
 .headerWrap {
     width: 100%;
     height: 10vh;
-    background-color: #FF4848;;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-bottom: 1px solid rgba(255, 183, 3, 0.1);
 }
 
 .headerWrap input {
     width: 50%;
-    height: 60%;
-    background-color: transparent;
-    position: relative;
-    left: 20px;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.05);
     outline: none;
-    border-radius: 8px;
-    border: 2px #FFA2A2 solid;
-    padding: 20px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 183, 3, 0.3);
+    padding: 10px 20px;
     color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.headerWrap input:focus {
+    border-color: #FFB703;
+    box-shadow: 0 0 15px rgba(255, 183, 3, 0.4);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .headerWrap img {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     position: relative;
-    right: 20px;
+    right: 40px;
+    cursor: pointer;
+    filter: brightness(0) invert(1); /* 아이콘을 흰색으로 임시 변환 */
 }
 
 .bodyWrap {
     display: flex;
-    justify-content: center;
-    align-items: center;
     width: 100%;
     height: 90%;
 }
@@ -52,184 +60,149 @@ body {
 .hierarchyWrap {
     width: 20%;
     height: 100%;
-    background-color: #FFFCF1;
-    border-right: 1px solid #F8E5D3;
-    box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.1);
+    background: rgba(15, 20, 30, 0.6);
+    border-right: 1px solid rgba(255, 183, 3, 0.1);
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+.brand-logo {
+    text-align: center;
+    padding: 30px 0;
+    border-bottom: 1px solid rgba(255, 183, 3, 0.1);
+    margin-bottom: 20px;
+}
+
+.brand-logo h1 {
+    color: #FFB703;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 183, 3, 0.5);
+}
+
+.brand-logo p {
+    color: #8b9bb4;
+    font-size: 0.8rem;
+    margin-top: 5px;
 }
 
 .hierarchy-root {
     cursor: pointer;
     width: 100%;
     display: block;
-    margin-top: 35px;
+    margin-top: 20px;
     margin-left: 20px;
 }
 
-.hierarchy-root ul {
-    width: 100%;
-    margin-left: 20px;
-}
+.hierarchy-root ul { margin-left: 20px; }
+.hierarchy-root li { font-size: 16px; margin-top: 10px; list-style-type: none; color: #a0aec0; }
+.hierarchy-root h2 { font-size: 18px; color: #e2e8f0; transition: color 0.2s;}
 
-.hierarchy-root li {
-    font-size: 20px;
-    margin-top: 5px;
-    list-style-type: none;
-    /* height: 30px; */
+.hierarchy-root li p:hover, .hierarchy-root h2:hover {
+    color: #FFB703;
+    text-shadow: 0 0 8px rgba(255, 183, 3, 0.8);
 }
-
-.hierarchy-root li p:hover {
-    color: #166aec;
-}
-
 .hierarchy-now {
-    color : #FF4848;
-}
-
-.hierarchy-root h2:hover {
-    color: #166aec;
-}
-
-.drawer-checkbox {
-    display: none;
-}
-.drawer {
-    height: 100%;
-    width: 250px;
-    position: fixed;
-    top: 0;
-    left: -250px;
-    background-color: #333;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-    display: none;
-}
-.drawer-checkbox:checked ~ .drawer {
-    left: 0;
-}
-.drawer-button {
-    position: fixed; 
-    left: 0px;
-    top: 50%; 
-    z-index: 100; 
-    transform: translateY(-50%);
-    transition: transform 0.5s;
-    display: none;
-    font-size: 25px;
-}
-.drawer-checkbox:checked ~ .drawer-button {
-    transform: translateX(250px);
-}
-.drawer-content {
-    color: white;
-    padding: 20px;
-    text-align: center;
-    display: none;
+    color: #FFB703 !important;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255, 183, 3, 0.8);
 }
 
 .mainWrap {
-    width: 70%;
-    /* min-height: 100vh; */
+    width: 80%;
     height: 100%;
-    /* border: 1px solid black; */
     display: flex;
     flex-direction: column;
-    background-color: #FFFCF1;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
-}
-
-.mainWrap hr {
-    background-color: #F8E5D3;
-}
-
-.item-container {
-    /* margin-left: 50px; */
-    margin-top: 50px;
-    margin-bottom: 50px;
-    width: 100%;
-    display: grid;
-    height: 90%;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    grid-template-rows: repeat(auto-fill, 161px);
-    justify-items: center;
-    align-items: center;
-    row-gap: 50px;
-    overflow-y: auto;
-}
-
-.item-wrap {
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-}
-
-.item-wrap p {
-    margin-top: 10px;
-}
-
-.item {
-    width: 8em;
-    height: 8em;
-    /* box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4), -3px -3px 5px rgba(0, 0, 0, 0.1); */
-    border: 2px solid #F8E5D3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.item img {
-    width: 70%;
-}
-
-@media (max-width: 500px) {
-    .hierarchyWrap {
-      display: none;
-    }
-    .mainWrap {
-        width: 100%;
-    }
-    .drawer {
-        display: inline;
-    }
-    .drawer-content {
-        display: inline;
-    }
-    .drawer-button {
-        display: inline;
-    }
+    background: transparent;
 }
 
 .menu-wrap {
     width: 100%;
-    height: 8%;
+    padding: 20px 30px;
     display: flex;
     align-items: center;
-    border-bottom: solid 1px #F8E5D3;
 }
 
 .menu-wrap button {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 28px;
+    padding: 10px 24px;
     border: none;
-    border-radius: 28px;
-    background: #F8E5D3;
-    color: #222222;  /* 어두운 텍스트 색상으로 가독성 확보 */
-    font-size: 1rem;
-    font-weight: 600;
-    box-shadow: 0 2px 8px rgba(248, 229, 211, 0.5);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #FFB703 0%, #FB8500 100%);
+    color: #111;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(255, 183, 3, 0.3);
     cursor: pointer;
-    transition: box-shadow 0.2s, transform 0.2s;
-    outline: none;
-    margin-left: 1em;
+    transition: all 0.3s ease;
+    margin-right: 15px;
 }
 
 .menu-wrap button:hover {
-  box-shadow: 0 4px 16px rgba(248, 229, 211, 0.75);
-  transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 20px rgba(255, 183, 3, 0.6);
+    transform: translateY(-2px);
+}
+
+.item-container {
+    padding: 20px 50px;
+    width: 100%;
+    height: calc(100% - 70px);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-auto-rows: 180px;
+    gap: 30px;
+    overflow-y: auto;
+}
+
+.item-container::-webkit-scrollbar { width: 8px; }
+.item-container::-webkit-scrollbar-thumb { background: rgba(255, 183, 3, 0.3); border-radius: 10px; }
+.item-container::-webkit-scrollbar-track { background: transparent; }
+
+.item-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.item-wrap p {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    text-align: center;
+    word-break: break-all;
+}
+
+.item {
+    width: 125px;
+    height: 125px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.item img {
+    width: 50%;
+    filter: drop-shadow(0 0 8px rgba(255, 183, 3, 0.8));
+    transition: all 0.3s ease;
+}
+
+.item:hover {
+    filter: drop-shadow(0 0 15px rgba(255, 183, 3, 1));
+    transform: scale(1.1);
+}
+
+.item.selected {
+    border: 2px solid #FFB703;
+    background: rgba(255, 183, 3, 0.1);
+    box-shadow: 0 0 25px rgba(255, 183, 3, 0.5) inset, 0 0 15px rgba(255, 183, 3, 0.4);
 }

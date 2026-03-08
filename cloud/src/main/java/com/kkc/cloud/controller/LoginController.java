@@ -2,6 +2,8 @@ package com.kkc.cloud.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kkc.cloud.data.LoginData;
@@ -20,5 +22,10 @@ public class LoginController {
 			return "main.html";
 		}
 		return "redirect:/login/login.html";
+	}
+	
+	@RequestMapping(value = "/guest", method = {RequestMethod.GET, RequestMethod.POST})
+	public String loginGuest(HttpSession session) {
+		return "main.html";
 	}
 }
